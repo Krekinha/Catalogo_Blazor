@@ -57,7 +57,6 @@ namespace Catalogo_Blazor.Server.Controllers
             try
             {
                 await _context.SaveChangesAsync();
-                return Ok(categoria);
             }
             catch (DbUpdateConcurrencyException)
             {
