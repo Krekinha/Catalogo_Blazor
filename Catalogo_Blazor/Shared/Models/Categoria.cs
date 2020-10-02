@@ -11,7 +11,7 @@ namespace Catalogo_Blazor.Shared.Models
         [MaxLength(100)]
         public string Nome { get; set; }
 
-        [Required(ErrorMessage = "A descrição da categoria é obrigatório")]
+        [Required(ErrorMessage = "A descrição da categoria é obrigatória")]
         [MaxLength(200)]
         public string Descricao { get; set; }
 
