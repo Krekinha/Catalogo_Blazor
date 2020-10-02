@@ -42,7 +42,7 @@ else
 }
 
 <div>
-    <a class="btn btn-success">Criar Categoria</a>
+    <a class="btn btn-success" href="categorias/create">Criar Categoria</a>
 </div>
 
 
@@ -57,22 +57,22 @@ else
     async Task carregaCategorias()
     {
         categorias = await http.GetFromJsonAsync<Categoria[]>("api/Categorias");
-        categorias = new Categoria[]
-        {
-            new Categoria()
-            {
-                CategoriaId = 1,
-                Nome = "Eletrônicos",
-                Descricao = "Produtos Eletrônicos"
+        //categorias = new Categoria[]
+        //{
+        //    new Categoria()
+        //    {
+        //        CategoriaId = 1,
+        //        Nome = "Eletrônicos",
+        //        Descricao = "Produtos Eletrônicos"
 
-            },
-            new Categoria()
-            {
-                CategoriaId = 2,
-                Nome = "Smartphones",
-                Descricao = "Dispositivos Smartphones"
+        //    },
+        //    new Categoria()
+        //    {
+        //        CategoriaId = 2,
+        //        Nome = "Smartphones",
+        //        Descricao = "Dispositivos Smartphones"
 
-            }
-        };
+        //    }
+        //};
     }
 }
