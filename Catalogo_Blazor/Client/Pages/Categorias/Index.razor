@@ -33,7 +33,7 @@ else
                     <a class="btn btn-primary" href="categorias/edit/@item.CategoriaId">Editar</a>
                 </td>
                 <td>
-                    <a class="btn btn-danger">Deletar</a>
+                    <a class="btn btn-danger" @onclick="@(()=> excluirCategoria(item.CategoriaId))">Deletar</a>
                 </td>
             </tr>
             }
@@ -45,9 +45,20 @@ else
     <a class="btn btn-success" href="categorias/create">Criar Categoria</a>
 </div>
 
+<Confirma @ref="confirmacao"
+          onCancela="CancelaConfirmacao"
+          onConfirma="RemoveConfirmacao">
+
+    <div>Deseja excluir esse item?</div>
+</Confirma>
+
 
 @code {
     Categoria[] categorias { get; set; }
+
+    //instancia do componente Confirm
+    Confirma confirmacao;
+    int catId;
 
     protected override async Task OnInitializedAsync()
     {
@@ -74,5 +85,25 @@ else
 
         //    }
         //};
+    }
+
+    void excluirCategoria(int categoriaId)
+    {
+        confirmacao.Exibir();
+        catId = categoriaId;
+
+    }
+
+    async void RemoveConfirmacao()
+    {
+        await http.DeleteAsync($"api/Categorias/{catId}");
+        confirmacao.Ocultar();
+        await carregaCategorias();
+        this.StateHasChanged();
+    }
+
+    void CancelaConfirmacao()
+    {
+        confirmacao.Ocultar();
     }
 }
