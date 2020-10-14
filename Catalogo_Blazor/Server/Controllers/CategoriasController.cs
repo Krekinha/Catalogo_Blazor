@@ -1,5 +1,7 @@
 ﻿using Catalogo_Blazor.Server.Context;
+using Catalogo_Blazor.Server.Utils;
 using Catalogo_Blazor.Shared.Models;
+using Catalogo_Blazor.Shared.Models.Recursos;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
@@ -22,9 +24,13 @@ namespace Catalogo_Blazor.Server.Controllers
         // GET: api/Categorias
         // Retorna uma lista de Categorias
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Categoria>>> GetCategorias()
+        public async Task<ActionResult<IEnumerable<Categoria>>> GetCategorias([FromQuery] Paginacao paginacao)
         {
-            return await _context.Categorias.ToListAsync();
+            var queryable = _context.Categorias.AsQueryable();
+
+            await HttpContext.InserirParametroEmPageResponse(queryable, paginacao.quantidadePorPagina);
+
+            return await queryable.Paginar(paginacao).ToListAsync();
         }
 
         // GET: api/Categorias/5
