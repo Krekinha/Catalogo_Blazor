@@ -7,6 +7,24 @@
     <a class="btn btn-success" href="categorias/create">Criar Categoria</a>
 </div>
 
+<br />
+
+<div class="form-inline">
+    <label class="sr-only" for="filter-name">Filtro</label>
+    <input type="text" class="form-control mb-2 mr-sm-2"
+           @bind="nomeFiltro"
+           placeholder="Fulano">
+
+    <button type="button" class="btn btn-primary mr-sm-2 mb-2" @onclick="Filtrar">
+        Filtrar
+    </button>
+
+    <button type="button" class="btn btn-danger mb-2" @onclick="LimparFiltro">
+        Limpar
+    </button>
+
+</div>
+
 @if (categorias == null)
 {
     <p><em>Carregando...</em></p>
@@ -67,6 +85,7 @@ else
 
     private int quantidadeTotalPaginas;
     private int paginaAtual = 1;
+    private string nomeFiltro = string.Empty;
 
     //instancia do componente Confirm
     Confirma confirmacao;
@@ -83,10 +102,25 @@ else
         await carregaCategorias();
     }
 
-    async Task carregaCategorias(int pagina=2, int quantidadePorPagina=5)
+    private async Task Filtrar()
+    {
+        paginaAtual = 1;
+        await carregaCategorias();
+    }
+
+
+    private async Task LimparFiltro()
+    {
+        nomeFiltro = string.Empty;
+        paginaAtual = 1;
+        await carregaCategorias();
+    }
+
+    async Task carregaCategorias(int pagina=1, int quantidadePorPagina=5)
     {
         var httpResponse =
-            await http.GetAsync($"api/Categorias?paginaAtual={pagina}&quantidadePorPagina={quantidadePorPagina}");
+            await http.GetAsync($"api/Categorias?paginaAtual={pagina}" +
+            $"&quantidadePorPagina={quantidadePorPagina}&nome={nomeFiltro}");
 
         if (httpResponse.IsSuccessStatusCode)
         {

@@ -24,9 +24,16 @@ namespace Catalogo_Blazor.Server.Controllers
         // GET: api/Categorias
         // Retorna uma lista de Categorias
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Categoria>>> GetCategorias([FromQuery] Paginacao paginacao)
+        public async Task<ActionResult<IEnumerable<Categoria>>> GetCategorias([FromQuery] Paginacao paginacao,
+            [FromQuery] string nome)
         {
             var queryable = _context.Categorias.AsQueryable();
+
+            //Filtra por nome
+            if (!string.IsNullOrEmpty(nome))
+            {
+                queryable = queryable.Where(x => x.Nome.Contains(nome));
+            }
 
             await HttpContext.InserirParametroEmPageResponse(queryable, paginacao.quantidadePorPagina);
 
