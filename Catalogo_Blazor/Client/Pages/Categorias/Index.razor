@@ -3,11 +3,15 @@
 
 <h2>Categorias</h2>
 
+<div>
+    <a class="btn btn-success" href="categorias/create">Criar Categoria</a>
+</div>
+
 @if (categorias == null)
 {
     <p><em>Carregando...</em></p>
 }
-else if (categorias.Length == 0)
+else if (categorias.Count == 0)
 {
     <p><em>Não existem categorias cadastradas...</em></p>
 }
@@ -39,11 +43,15 @@ else
             }
         </tbody>
     </table>
+
+    <hr />
+
+    <Paginacao quantidadeTotalPaginas="quantidadeTotalPaginas" paginaAtual="paginaAtual" 
+               Raio="2" paginaSelecionada="paginaSelecionada">
+
+    </Paginacao>
 }
 
-<div>
-    <a class="btn btn-success" href="categorias/create">Criar Categoria</a>
-</div>
 
 <Confirma @ref="confirmacao"
           onCancela="CancelaConfirmacao"
@@ -54,37 +62,46 @@ else
 
 
 @code {
-    Categoria[] categorias { get; set; }
+
+    List<Categoria> categorias { get; set; }
+
+    private int quantidadeTotalPaginas;
+    private int paginaAtual = 1;
 
     //instancia do componente Confirm
     Confirma confirmacao;
     int catId;
+
+    private async Task paginaSelecionada(int pagina)
+    {
+        paginaAtual = pagina;
+        await carregaCategorias(pagina);
+    }
 
     protected override async Task OnInitializedAsync()
     {
         await carregaCategorias();
     }
 
-    async Task carregaCategorias()
+    async Task carregaCategorias(int pagina=2, int quantidadePorPagina=5)
     {
-        categorias = await http.GetFromJsonAsync<Categoria[]>("api/Categorias");
-        //categorias = new Categoria[]
-        //{
-        //    new Categoria()
-        //    {
-        //        CategoriaId = 1,
-        //        Nome = "Eletrônicos",
-        //        Descricao = "Produtos Eletrônicos"
+        var httpResponse =
+            await http.GetAsync($"api/Categorias?paginaAtual={pagina}&quantidadePorPagina={quantidadePorPagina}");
 
-        //    },
-        //    new Categoria()
-        //    {
-        //        CategoriaId = 2,
-        //        Nome = "Smartphones",
-        //        Descricao = "Dispositivos Smartphones"
+        if (httpResponse.IsSuccessStatusCode)
+        {
 
-        //    }
-        //};
+            quantidadeTotalPaginas =
+                int.Parse(httpResponse.Headers.GetValues("totalPaginas").FirstOrDefault());
+
+            var responseString = await httpResponse.Content.ReadAsStringAsync();
+
+            categorias = JsonSerializer.Deserialize<List<Categoria>>(responseString,
+                new JsonSerializerOptions()
+                {
+                    PropertyNameCaseInsensitive = true
+                }) ;
+        }
     }
 
     void excluirCategoria(int categoriaId)

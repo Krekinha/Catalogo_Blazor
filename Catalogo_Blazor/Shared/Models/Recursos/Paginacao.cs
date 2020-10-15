@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Catalogo_Blazor.Shared.Models.Recursos
+﻿namespace Catalogo_Blazor.Shared.Models.Recursos
 {
     public class Paginacao
     {
