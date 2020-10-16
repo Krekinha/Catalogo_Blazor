@@ -1,0 +1,160 @@
+﻿@page "/produtos"
+@inject HttpClient http
+
+<h2>Produtos</h2>
+
+<div>
+    <a class="btn btn-success" href="produtos/create">Criar Produto</a>
+</div>
+
+<br />
+
+<div class="form-inline">
+    <label class="sr-only" for="filter-name">Filtro</label>
+    <input type="text" class="form-control mb-2 mr-sm-2"
+           @bind="nomeFiltro"
+           placeholder="Filtrar pelo nome">
+
+    <button type="button" class="btn btn-primary mr-sm-2 mb-2" @onclick="Filtrar">
+        Filtrar
+    </button>
+
+    <button type="button" class="btn btn-danger mb-2" @onclick="LimparFiltro">
+        Limpar
+    </button>
+
+</div>
+
+@if (produtos == null)
+{
+    <p><em>Carregando...</em></p>
+}
+else if (produtos.Count == 0)
+{
+    <p><em>Não existem produtos cadastradas...</em></p>
+}
+else
+{
+    //exibe produtos
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Produto</th>
+                <th>Descrição</th>
+                <th>Editar</th>
+                <th>Excluir</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in produtos)
+            {
+                <tr>
+                    <td>@item.Nome</td>
+                    <td>@item.Descricao</td>
+                    <td>
+                        <a class="btn btn-primary" href="produtos/edit/@item.ProdutoId">Editar</a>
+                    </td>
+                    <td>
+                        <a class="btn btn-danger" @onclick="@(()=> excluirProduto(item.ProdutoId))">Deletar</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <hr />
+
+    <Paginacao quantidadeTotalPaginas="quantidadeTotalPaginas" paginaAtual="paginaAtual"
+               Raio="2" paginaSelecionada="paginaSelecionada">
+
+    </Paginacao>
+}
+
+
+<Confirma @ref="confirmacao"
+          onCancela="CancelaConfirmacao"
+          onConfirma="RemoveConfirmacao">
+
+    <div>Deseja excluir esse item?</div>
+</Confirma>
+
+
+@code {
+
+    List<Produto> produtos { get; set; }
+
+    private int quantidadeTotalPaginas;
+    private int paginaAtual = 1;
+    private string nomeFiltro = string.Empty;
+
+    //instancia do componente Confirm
+    Confirma confirmacao;
+    int catId;
+
+    private async Task paginaSelecionada(int pagina)
+    {
+        paginaAtual = pagina;
+        await carregaProdutos(pagina);
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await carregaProdutos();
+    }
+
+    private async Task Filtrar()
+    {
+        paginaAtual = 1;
+        await carregaProdutos();
+    }
+
+
+    private async Task LimparFiltro()
+    {
+        nomeFiltro = string.Empty;
+        paginaAtual = 1;
+        await carregaProdutos();
+    }
+
+    async Task carregaProdutos(int pagina = 1, int quantidadePorPagina = 5)
+    {
+        var httpResponse =
+            await http.GetAsync($"api/Produtos?paginaAtual={pagina}" +
+            $"&quantidadePorPagina={quantidadePorPagina}&nome={nomeFiltro}");
+
+        if (httpResponse.IsSuccessStatusCode)
+        {
+
+            quantidadeTotalPaginas =
+                int.Parse(httpResponse.Headers.GetValues("totalPaginas").FirstOrDefault());
+
+            var responseString = await httpResponse.Content.ReadAsStringAsync();
+
+            produtos = JsonSerializer.Deserialize<List<Produto>>(responseString,
+                new JsonSerializerOptions()
+                {
+                    PropertyNameCaseInsensitive = true
+                });
+        }
+    }
+
+    void excluirProduto(int produtoId)
+    {
+        confirmacao.Exibir();
+        catId = produtoId;
+
+    }
+
+    async void RemoveConfirmacao()
+    {
+        await http.DeleteAsync($"api/Produtos/{catId}");
+        confirmacao.Ocultar();
+        await carregaProdutos();
+        this.StateHasChanged();
+    }
+
+    void CancelaConfirmacao()
+    {
+        confirmacao.Ocultar();
+    }
+}
