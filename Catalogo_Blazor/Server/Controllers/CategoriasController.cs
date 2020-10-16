@@ -23,6 +23,14 @@ namespace Catalogo_Blazor.Server.Controllers
 
         // GET: api/Categorias
         // Retorna uma lista de Categorias
+        [HttpGet("todas")]
+        public async Task<ActionResult<IEnumerable<Categoria>>> GetCategorias()
+        {
+            return await _context.Categorias.AsNoTracking().ToListAsync();
+        }
+
+        // GET: api/Categorias
+        // Retorna uma lista de Categorias com filtro por nome e paginação
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Categoria>>> GetCategorias([FromQuery] Paginacao paginacao,
             [FromQuery] string nome)

@@ -101,7 +101,7 @@
 
     async Task carregaCategorias()
     {
-        categorias = await http.GetFromJsonAsync<List<Categoria>>("api/Categorias");
+        categorias = await http.GetFromJsonAsync<List<Categoria>>("api/categorias/todas");
     }
 
     void categoriaSelectionChanged(ChangeEventArgs e)
