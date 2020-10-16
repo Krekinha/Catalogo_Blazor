@@ -1,6 +1,7 @@
 ﻿@page "/categorias/create"
 @inject HttpClient http
 @inject NavigationManager nav
+@inject IJSRuntime js 
 
 <h2>Nova categoria</h2>
 
@@ -10,7 +11,7 @@
     <div class="form-group">
         <label form="nome">Nome</label>
         <div>
-            <InputText @bind-Value="@categoria.Nome" class="form-control" />
+            <InputText id="txtCategoriaNome" @bind-Value="@categoria.Nome" class="form-control" />
             <ValidationMessage For="@(()=> categoria.Nome)" />
         </div>
     </div>
@@ -31,6 +32,19 @@
 
 @code {
     Categoria categoria = new Categoria();
+
+    protected  async override Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await Focus("txtCategoriaNome");
+        }
+    }
+
+    public async Task Focus(string elementId)
+    {
+        await js.InvokeVoidAsync("focusById", elementId);
+    }
 
     async Task criarCategoria()
     {
