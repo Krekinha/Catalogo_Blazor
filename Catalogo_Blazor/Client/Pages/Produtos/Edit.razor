@@ -1,0 +1,112 @@
+﻿@page "/produtos/edit/{produtoId:int}"
+@inject HttpClient http
+@inject NavigationManager nav
+
+<h2>Novo Produto</h2>
+
+<EditForm Model="@produto" OnValidSubmit="@editarProduto">
+    <DataAnnotationsValidator />
+
+    <div class="form-group">
+        <label form="nome">Nome</label>
+        <div>
+            <InputText id="txtProdutoNome" @bind-Value="@produto.Nome" class="form-control" />
+            <ValidationMessage For="@(()=> produto.Nome)" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label form="descricao">Descricao</label>
+        <div>
+            <InputText @bind-Value="@produto.Descricao" class="form-control" />
+            <ValidationMessage For="@(()=> produto.Descricao)" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label form="preco">Preço</label>
+        <div>
+            <InputNumber @bind-Value="@produto.Preco" class="form-control" />
+            <ValidationMessage For="@(()=> produto.Preco)" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label form="categoria">Categoria:</label>
+        <select @onchange="categoriaSelectionChanged" class="form-control">
+            @if (categorias != null)
+            {
+                foreach (var categoria in categorias)
+                {
+                    <option value="@categoria.CategoriaId"
+                            selected="@(categoria.CategoriaId == produto.CategoriaId ? true : false)">
+                        @categoria.Nome
+                    </option>
+                }
+            }
+        </select>
+    </div>
+
+    <div class="form-group">
+        <InputImagem Label="Imagem" ImagemSelecionada="imagemSelecionada"
+                     ImagemRemota="@imagemRemota">
+
+        </InputImagem>
+    </div>
+
+    <br />
+    <button type="submit" class="btn btn-success">Salvar</button>
+    <button class="btn btn-secondary" @onclick="@(()=> nav.NavigateTo("produtos"))">Cancelar</button>
+
+</EditForm>
+
+
+@code {
+
+    [Parameter]
+    public int ProdutoId { get; set; }
+
+    private string imagemRemota { get; set; }
+
+    Produto produto = new Produto();
+    List<Categoria> categorias;
+
+    protected async override Task OnInitializedAsync()
+    {
+        await carregaCategorias();
+    }
+
+    async Task carregaCategorias()
+    {
+        categorias = await http.GetFromJsonAsync<List<Categoria>>("api/categorias/todas");
+    }
+
+    protected async override Task OnParametersSetAsync()
+    {
+        produto = await http.GetFromJsonAsync<Produto>($"api/produtos/{ProdutoId}");
+        imagemRemota = produto.ImagemUrl;
+    }
+
+    async Task editarProduto()
+    {
+        imagemRemota = null;
+        await http.PutAsJsonAsync($"api/produtos/{ProdutoId}", produto);
+        nav.NavigateTo("produtos");
+    }
+
+    private void categoriaSelectionChanged(ChangeEventArgs e)
+    {
+        if (int.TryParse(e.Value.ToString(), out int id))
+        {
+            produto.CategoriaId = id;
+        }
+    }
+
+    private void imagemSelecionada(string imagemBase64)
+    {
+        produto.ImagemUrl = imagemBase64;
+        imagemRemota = null;
+    }
+
+
+}
