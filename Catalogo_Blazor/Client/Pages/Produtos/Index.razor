@@ -41,6 +41,7 @@ else
             <tr>
                 <th>Produto</th>
                 <th>Descrição</th>
+                <th>Preço</th>
                 <th>Editar</th>
                 <th>Excluir</th>
             </tr>
@@ -48,16 +49,17 @@ else
         <tbody>
             @foreach (var item in produtos)
             {
-                <tr>
-                    <td>@item.Nome</td>
-                    <td>@item.Descricao</td>
-                    <td>
-                        <a class="btn btn-primary" href="produtos/edit/@item.ProdutoId">Editar</a>
-                    </td>
-                    <td>
-                        <a class="btn btn-danger" @onclick="@(()=> excluirProduto(item.ProdutoId))">Deletar</a>
-                    </td>
-                </tr>
+            <tr>
+                <td>@item.Nome</td>
+                <td>@item.Descricao</td>
+                <td>@item.Preco</td>
+                <td>
+                    <a class="btn btn-primary" href="produtos/edit/@item.ProdutoId">Editar</a>
+                </td>
+                <td>
+                    <a class="btn btn-danger" @onclick="@(()=> excluirProduto(item.ProdutoId))">Deletar</a>
+                </td>
+            </tr>
             }
         </tbody>
     </table>

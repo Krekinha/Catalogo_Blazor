@@ -48,18 +48,10 @@
     </div>
 
     <div class="form-group">
-        <label form="preco">Preço</label>
-        <div>
-            <InputNumber @bind-Value="@produto.Preco" class="form-control" />
-            <ValidationMessage For="@(()=> produto.Preco)" />
-        </div>
-    </div>
+        <InputImagem Label="Imagem" ImagemSelecionada="imagemSelecionada"
+                     ImagemRemota="@ImagemRemota">
 
-    <div class="form-group">
-        <label form="categoria">Imagem:</label>
-        <div>
-            <InputText @bind-Value="@produto.ImagemUrl" class="form-control" />
-        </div>
+        </InputImagem>
     </div>
 
     <br />
@@ -71,6 +63,9 @@
 
 
 @code {
+
+    [Parameter]
+    public string ImagemRemota { get; set; }
 
     Produto produto = new Produto();
     List<Categoria> categorias;
@@ -110,6 +105,12 @@
         {
             produto.CategoriaId = id;
         }
+    }
+
+    private void imagemSelecionada(string imagemBase64)
+    {
+        produto.ImagemUrl = imagemBase64;
+        ImagemRemota = null;
     }
 
 
