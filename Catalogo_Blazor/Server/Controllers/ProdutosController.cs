@@ -55,6 +55,21 @@ namespace Catalogo_Blazor.Server.Controllers
             return produto;
         }
 
+        // GET: api/produtos/categorias/{categoriaId}
+        // retorna Produtos relacionados à Categoria "CategoriaId"
+        [HttpGet("categorias/{id:int}")]
+        public async Task<ActionResult<List<Produto>>> GetProdutosCategoria(int id)
+        {
+            var produtos = await _context.Produtos.Where(p => p.CategoriaId == id).ToListAsync();
+
+            if (produtos == null)
+            {
+                return NotFound();
+            }
+
+            return produtos;
+        }
+
         // PUT: api/Produtos/5
         // Atualiza uma Produto existente
         [HttpPut("{id}")]
