@@ -22,7 +22,15 @@ namespace Catalogo_Blazor.Server.Controllers
         }
 
         // GET: api/Produtos
-        // Retorna uma lista de Produtos
+        // Retorna uma lista de Produtos sem filtros
+        [HttpGet("todos")]
+        public async Task<ActionResult<IEnumerable<Produto>>> GetProdutos()
+        {
+            return await _context.Produtos.AsNoTracking().ToListAsync();
+        }
+
+        // GET: api/Produtos
+        // Retorna uma lista de Produtos com filtro
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Produto>>> GetProdutos([FromQuery] Paginacao paginacao,
             [FromQuery] string nome)
