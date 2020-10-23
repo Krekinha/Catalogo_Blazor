@@ -8,5 +8,5 @@ Web application of a catalog of various products. The Solution contains a Front-
 | ----- | ---- |
 | [Session #0](/docs/00-get-started.md) | Get bits installed and build your first Blazor app |
 | [Session #1]() | coming soon |
-| [Session #2] | ...  |
-| [Session #3]() | ... |
+| Session #2 | coming soon |
+| Session #3 | ... |
