@@ -7,6 +7,6 @@ Aplicação web de um catálogo de produtos diversos. A Solution contém um proj
 | Session | Topics |
 | ----- | ---- |
 | [Session #0](/docs/00-get-started.md) | Get bits installed and build your first Blazor app |
-| [Session #1](link) | coming soon |
-| [Session #2](link) | ...  |
-| [Session #3](link) | ... |
+| [Session #1]() | coming soon |
+| [Session #2]() | ...  |
+| [Session #3]() | ... |
