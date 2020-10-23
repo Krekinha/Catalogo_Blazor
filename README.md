@@ -1,4 +1,4 @@
-# Catalogo_Blazor
+# Blazor - product catalog
 
 Aplicação web de um catálogo de produtos diversos. A Solution contém um projeto Front-End utilizando a linguagem C# e as tecnologias ASP .Net Core Blazor, um projeto Back-End usando também a linguagem C#, HTML, Entity Framework Core e SQL Database, e um projeto com código compartilhado entre as aplicações. 
 
