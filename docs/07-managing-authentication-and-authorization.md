@@ -1,1 +1,1 @@
-![Blazing Pizza](docs/img/07-a2.jpg) talalalalalalala
+![Blazing Pizza](img/07-a2.jpg) talalalalalalala
