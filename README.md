@@ -4,14 +4,7 @@ Web application of a catalog of various products. The Solution contains a Front-
 
 ![Blazing Pizza](docs/img/00-blazor-catalogo.png)
 
-## Sessions
-
-| Session | Topics |
-| ----- | ---- |
-| [Session #0](/docs/00-get-started.md) | Get bits installed and build your first Blazor app |
-| Session #1 | coming soon |
-| Session #2 | ... |
-| [Session #7](/docs/implementing-security.md) | Implementing Security
+## Table of contents
 
 #### Get started
 * [Get bits installed and build your first Blazor app](/docs/00-get-started.md)
