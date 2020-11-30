@@ -11,7 +11,7 @@ In `Blazor Server` projects, authorization checks are able to determine:
 - The user interface options presented to the user 
 - Access rules for application areas and components
 
-In `Blazor WebAssembly` projects authorization is used only to determine which user interface options will be presented  
+In `Blazor WebAssembly` projects authorization is used **only** to determine which user interface options will be presented  
 A `WebAssembly` application cannot enforce authorization access rules
 
 ### Blazor Server: Authentication
@@ -20,3 +20,14 @@ A `WebAssembly` application cannot enforce authorization access rules
 The `Blazor Server App` template allows you to configure the authentication mechanism  
 Authentication uses _cookies_ or another process to determine the user's identity and uses the same mechanism as `ASP.NET Core` applications  
 The project can track the identity of the logged in user and apply authorization rules
+
+### Blazor WebAssembly: Authentication
+In `Blazor WebAssembly` projects authentication checks can be ignored because all client-side code can be modified by the user  
+We can implement a custom `AuthenticationStateProvider` service for `Blazor WebAssembly` applications  
+`AuthenticationStateProvider` is an internal service that obtains authentication status data from `HttpContext.User` from `ASP.NET Core`  
+It is used by the `AuthorizeView` and `CascadingAuthenticationState` components to obtain the authentication state  
+
+### Blazor WebAssembly: Configuring the project for Authentication
+1. In the _Client_ project, import the `Microsoft.AspNetCore.Components.Authorization` package
+2. Include in the `_imports.razor` file of the `Client` project the reference to the `@using Microsoft.AspNetCore.Components.Authorization` _namespace_
+3. Include in the `Startup` class of the _Client_ project, in the _ConfigureServices_ method, the authorization service _services.AddAuthorizationCore()_
