@@ -18,8 +18,8 @@ Web application of a catalog of various products. The Solution contains a Front-
 * coming soon
 #### Backend com ASP .NET Core e HTTP
 * coming soon
-#### Implementing Security
-* coming soon
+#### 7. Implementing Security
+* [Managing authentication and authorization]((/docs/managing-authentication-and-authorization.md))
 
 
 ## License
