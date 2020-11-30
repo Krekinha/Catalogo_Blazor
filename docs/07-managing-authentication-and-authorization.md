@@ -11,5 +11,5 @@ In Blazor Server projects, authorization checks are able to determine:
 - The user interface options presented to the user 
 - Access rules for application areas and components
 
-In Blazor WebAssembly projects authorization is used only to determine which user interface options will be presented  
+In `Blazor WebAssembly` projects authorization is used only to determine which user interface options will be presented  
 A WebAssembly application cannot enforce authorization access rules
