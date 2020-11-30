@@ -1,3 +1,5 @@
+## 07. Managing Authentication and Authorization
+
 |||
 |-|-|
 |![](img/07-a1.jpg)| Authentication is used to identify a user's identity. It is in authentication that the user proves who he is |
