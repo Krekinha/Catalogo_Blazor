@@ -19,7 +19,7 @@ Web application of a catalog of various products. The Solution contains a Front-
 #### Backend com ASP .NET Core e HTTP
 * coming soon
 #### 7. Implementing Security
-* [Managing authentication and authorization]((/docs/7.1-managing-authentication-and-authorization.md))
+* [Managing authentication and authorization](/docs/7.1-managing-authentication-and-authorization.md)
 
 
 ## License
