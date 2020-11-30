@@ -1,2 +1,4 @@
-| Session | Topics |
-| ![](img/07-a2.jpg) | A Autenticação é usada para identificar a identidade de um usuário. É na autenticação que o usuário prova quem ele é |
+|  |  |
+| ----- | ---- |
+| ![](img/07-a2.jpg) | Authentication is used to identify a user's identity. It is in authentication that the user proves who he is |
+| ![](img/07-a1.jpg) | Authorization is used to determine what an authenticated user can access and what actions he can take |
