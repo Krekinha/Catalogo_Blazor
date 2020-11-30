@@ -1,4 +1,4 @@
-## 07. Managing Authentication and Authorization
+# 7.1 Managing Authentication and Authorization
 
 |||
 |-|-|
@@ -13,3 +13,10 @@ In `Blazor Server` projects, authorization checks are able to determine:
 
 In `Blazor WebAssembly` projects authorization is used only to determine which user interface options will be presented  
 A `WebAssembly` application cannot enforce authorization access rules
+
+### Blazor Server: Authentication
+`Blazor` uses existing `ASP.NET Core` authentication mechanisms to establish the user's identity  
+`Blazor Server` applications operate over a real-time connection that is created using `SignalR`  
+The `Blazor Server App` template allows you to configure the authentication mechanism  
+Authentication uses _cookies_ or another process to determine the user's identity and uses the same mechanism as `ASP.NET Core` applications  
+The project can track the identity of the logged in user and apply authorization rules
