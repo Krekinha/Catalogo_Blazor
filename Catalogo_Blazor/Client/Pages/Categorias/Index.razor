@@ -1,160 +1,159 @@
 ﻿@page "/categorias"
 @inject HttpClient http
 
-<h2>Categorias</h2>
-
-<div>
-    <a class="btn btn-success" href="categorias/create">Criar Categoria</a>
-</div>
-
-<br />
-
-<div class="form-inline">
-    <label class="sr-only" for="filter-name">Filtro</label>
-    <input type="text" class="form-control mb-2 mr-sm-2"
-           @bind="nomeFiltro"
-           placeholder="Filtrar pelo nome">
-
-    <button type="button" class="btn btn-primary mr-sm-2 mb-2" @onclick="Filtrar">
-        Filtrar
-    </button>
-
-    <button type="button" class="btn btn-danger mb-2" @onclick="LimparFiltro">
-        Limpar
-    </button>
-
-</div>
-
-@if (categorias == null)
-{
-    <p><em>Carregando...</em></p>
-}
-else if (categorias.Count == 0)
-{
-    <p><em>Não existem categorias cadastradas...</em></p>
-}
-else
-{
-    //exibe categorias
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Categoria</th>
-                <th>Descrição</th>
-                <th>Editar</th>
-                <th>Excluir</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in categorias)
-            {
-            <tr>
-                <td>@item.Nome</td>
-                <td>@item.Descricao</td>
-                <td>
-                    <a class="btn btn-primary" href="categorias/edit/@item.CategoriaId">Editar</a>
-                </td>
-                <td>
-                    <a class="btn btn-danger" @onclick="@(()=> excluirCategoria(item.CategoriaId))">Deletar</a>
-                </td>
-            </tr>
-            }
-        </tbody>
-    </table>
-
-    <hr />
-
-    <Paginacao quantidadeTotalPaginas="quantidadeTotalPaginas" paginaAtual="paginaAtual" 
-               Raio="2" paginaSelecionada="paginaSelecionada">
-
-    </Paginacao>
-}
 
 
-<Confirma @ref="confirmacao"
-          onCancela="CancelaConfirmacao"
-          onConfirma="RemoveConfirmacao">
+<AuthorizeView>
 
-    <div>Deseja excluir esse item?</div>
-</Confirma>
+    <Authorized>
+        @* nesta tag definimos oque o usuário pode ver quando está autenticado *@
+        <h2>Categorias</h2>
 
+        <div>
+            <a class="btn btn-success" href="categorias/create">Criar Categoria</a>
+        </div>
 
-@code {
+        <br />
 
-    List<Categoria> categorias { get; set; }
-
-    private int quantidadeTotalPaginas;
-    private int paginaAtual = 1;
-    private string nomeFiltro = string.Empty;
-
-    //instancia do componente Confirm
-    Confirma confirmacao;
-    int catId;
-
-    private async Task paginaSelecionada(int pagina)
-    {
-        paginaAtual = pagina;
-        await carregaCategorias(pagina);
-    }
-
-    protected override async Task OnInitializedAsync()
-    {
-        await carregaCategorias();
-    }
-
-    private async Task Filtrar()
-    {
-        paginaAtual = 1;
-        await carregaCategorias();
-    }
-
-
-    private async Task LimparFiltro()
-    {
-        nomeFiltro = string.Empty;
-        paginaAtual = 1;
-        await carregaCategorias();
-    }
-
-    async Task carregaCategorias(int pagina=1, int quantidadePorPagina=5)
-    {
-        var httpResponse =
-            await http.GetAsync($"api/Categorias?paginaAtual={pagina}" +
-            $"&quantidadePorPagina={quantidadePorPagina}&nome={nomeFiltro}");
-
-        if (httpResponse.IsSuccessStatusCode)
+        @if (categorias == null)
         {
-
-            quantidadeTotalPaginas =
-                int.Parse(httpResponse.Headers.GetValues("totalPaginas").FirstOrDefault());
-
-            var responseString = await httpResponse.Content.ReadAsStringAsync();
-
-            categorias = JsonSerializer.Deserialize<List<Categoria>>(responseString,
-                new JsonSerializerOptions()
-                {
-                    PropertyNameCaseInsensitive = true
-                }) ;
+            <p><em>Carregando...</em></p>
         }
-    }
+        else if (categorias.Count == 0)
+        {
+            <p><em>Não existem categorias cadastradas...</em></p>
+        }
+        else
+        {
+            //exibe categorias
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Categoria</th>
+                        <th>Descrição</th>
+                        <th>Editar</th>
+                        <th>Excluir</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in categorias)
+                    {
+                        <tr>
+                            <td>@item.Nome</td>
+                            <td>@item.Descricao</td>
+                            <td>
+                                <a class="btn btn-primary" href="categorias/edit/@item.CategoriaId">Editar</a>
+                            </td>
+                            <td>
+                                <a class="btn btn-danger" @onclick="@(()=> excluirCategoria(item.CategoriaId))">Deletar</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
 
-    void excluirCategoria(int categoriaId)
-    {
-        confirmacao.Exibir();
-        catId = categoriaId;
+            <hr />
 
-    }
+            <Paginacao quantidadeTotalPaginas="quantidadeTotalPaginas" paginaAtual="paginaAtual"
+                       Raio="2" paginaSelecionada="paginaSelecionada">
 
-    async void RemoveConfirmacao()
-    {
-        await http.DeleteAsync($"api/Categorias/{catId}");
-        confirmacao.Ocultar();
-        await carregaCategorias();
-        this.StateHasChanged();
-    }
+            </Paginacao>
+        }
 
-    void CancelaConfirmacao()
-    {
-        confirmacao.Ocultar();
-    }
-}
+
+        <Confirma @ref="confirmacao"
+                  onCancela="CancelaConfirmacao"
+                  onConfirma="RemoveConfirmacao">
+
+            <div>Deseja excluir esse item?</div>
+        </Confirma>
+
+    </Authorized>
+
+    <NotAuthorized>
+        @* nesta tag definimos oque o usuário pode ver quando NÃO está autenticado *@
+        <h1>Usuário não autenticado!</h1>
+    </NotAuthorized>
+
+</AuthorizeView>
+
+
+        @code {
+
+            List<Categoria> categorias { get; set; }
+
+            private int quantidadeTotalPaginas;
+            private int paginaAtual = 1;
+            private string nomeFiltro = string.Empty;
+
+            //instancia do componente Confirm
+            Confirma confirmacao;
+            int catId;
+
+            private async Task paginaSelecionada(int pagina)
+            {
+                paginaAtual = pagina;
+                await carregaCategorias(pagina);
+            }
+
+            protected override async Task OnInitializedAsync()
+            {
+                await carregaCategorias();
+            }
+
+            private async Task Filtrar()
+            {
+                paginaAtual = 1;
+                await carregaCategorias();
+            }
+
+
+            private async Task LimparFiltro()
+            {
+                nomeFiltro = string.Empty;
+                paginaAtual = 1;
+                await carregaCategorias();
+            }
+
+            async Task carregaCategorias(int pagina = 1, int quantidadePorPagina = 5)
+            {
+                var httpResponse =
+                    await http.GetAsync($"api/Categorias?paginaAtual={pagina}" +
+                    $"&quantidadePorPagina={quantidadePorPagina}&nome={nomeFiltro}");
+
+                if (httpResponse.IsSuccessStatusCode)
+                {
+
+                    quantidadeTotalPaginas =
+                        int.Parse(httpResponse.Headers.GetValues("totalPaginas").FirstOrDefault());
+
+                    var responseString = await httpResponse.Content.ReadAsStringAsync();
+
+                    categorias = JsonSerializer.Deserialize<List<Categoria>>(responseString,
+                        new JsonSerializerOptions()
+                        {
+                            PropertyNameCaseInsensitive = true
+                        });
+                }
+            }
+
+            void excluirCategoria(int categoriaId)
+            {
+                confirmacao.Exibir();
+                catId = categoriaId;
+
+            }
+
+            async void RemoveConfirmacao()
+            {
+                await http.DeleteAsync($"api/Categorias/{catId}");
+                confirmacao.Ocultar();
+                await carregaCategorias();
+                this.StateHasChanged();
+            }
+
+            void CancelaConfirmacao()
+            {
+                confirmacao.Ocultar();
+            }
+        }

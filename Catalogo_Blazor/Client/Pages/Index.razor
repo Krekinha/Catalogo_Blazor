@@ -1,3 +1,21 @@
 ﻿@page "/"
 
 <h1>Catálogo de produtos</h1>
+<AuthorizeView>
+    <Authorized>
+        @* nesta tag definimos oque o usuário pode ver quando está autenticado *@
+        <a href="Identity/Account/Manage">Olá, @context.User.Identity.Name!</a>
+        <a href="Identify/Account/LogOut">Logout</a>
+        <br />
+        @if (@context.User.IsInRole("Admin"))
+        {
+            <text>Usuário Admin</text>
+        }
+    </Authorized>
+
+    <NotAuthorized>
+        @* nesta tag definimos oque o usuário pode ver quando NÃO está autenticado *@
+        <h1>Usuário não autenticado!</h1>
+    </NotAuthorized>
+
+</AuthorizeView>
