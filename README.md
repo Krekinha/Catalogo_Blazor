@@ -21,6 +21,7 @@ Web application of a catalog of various products. The Solution contains a Front-
 #### 7. Implementing Security
 * [Managing authentication and authorization](/docs/7.1-managing-authentication-and-authorization.md)
 * [Implementing AuthenticationStateProvider](/docs/7.2-implementing-AuthenticationStateProvider.md)
+* [Using the AuthorizeView component](/docs/7.3-Using-the-AuthorizeView-component.md)
 
 
 ## License
